@@ -1,0 +1,19 @@
+tom rettype some(MoType<T> args) {
+  req 1;
+  req 2;
+  end;
+}
+
+iew some_var = some(nin);
+
+xat some_struct {
+  pruvo iew inner; 
+
+  tom some_struct(iew inner) {
+    self.inner = inner;
+  }
+
+  convo<iew> () {
+    rnd self.inner;
+  }
+}

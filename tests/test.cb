@@ -1,0 +1,6 @@
+
+tom iew add(iew i1, iew i2) {
+  rnd i1 + i2;
+}
+
+print(add(1, 23));
