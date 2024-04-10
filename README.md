@@ -22,7 +22,7 @@
 
 ## Usage
 
-```ps
+```js
 > cuba "<path-to-cbo-file>"
 
 > cuba.exe "<path-to-cbo-file>"
