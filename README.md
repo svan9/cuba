@@ -24,9 +24,11 @@
 
 ```js
 > cuba "<path-to-cbo-file>"
-
+```
+```js
 > cuba.exe "<path-to-cbo-file>"
-
+```
+```js
 > cuba "somefile.cbo"
 ```
 
