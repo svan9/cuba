@@ -21,7 +21,8 @@ run: all
 	./$(EXECUTABLE)
 
 test: all
-	./$(EXECUTABLE) "E:\sosou\GITHUB\cuba\tests\test.cbo"
+	./$(EXECUTABLE) ./tests/test.cbo 
+# "E:\sosou\GITHUB\cuba\tests\test.cbo"
 
 ./$(EXECUTABLE): $(OBJECTS)
 	$(CXX) -I$(INCLUDE) $^ -o $@ $(CXX_ARGS)

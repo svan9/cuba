@@ -1,4 +1,5 @@
 #include <explorer.h>
+#include <cerror.h>
 
 std::string string_format(const std::string fmt, ...) {
   int size = ((int)fmt.size()) * 2 + 50;
@@ -61,166 +62,107 @@ void Explorer::work() {
 void Explorer::work_with_cbo() {
   Token* tk; 
   tk = this->lexer->next();
+  std::string entry;
   
   while (!this->lexer->isEnd()) {
-    // tk->printSelf();
     switch (tk->getType()) {
       case TokenType::TK_TEXT: {
         if (tk->has("tom")) {
+          
           FN_NODE fnode = {};
+
+          bool is_type = false;
+          bool is_argc = false;
+          bool is_cast = false;
+          bool is_arg  = false;
+          bool is_name = false;
 
           //? name
           TKGEN_TK(TokenType::TK_TEXT, "name");
           fnode.declName = tk->getValue();
           
-          //? rettype
-          TKGEN_TK("type", "rettype");
-          TKGEN_TK(TokenType::TK_TEXT, "rettype");
-          fnode.rttype = tk->getValue();
-          
-          //? args
-          //* argc
-          TKGEN_TK("argc", "argc");
-          TKGEN_TK(TokenType::TK_NUMBER, "argc");
-          int argc = std::stoi(tk->getValue());
+          while (!tk->has("begin") && lexer->isEnd()) {
+            tk = this->lexer->next();
+            if (tk->has("type")) {
+              //? rettype
+              TKGEN_TK(TokenType::TK_TEXT, "rettype");
+              fnode.rttype = tk->getValue();
+              is_type = true;
+            }
+            //? args
+            if (tk->has("argc")) {
+            //* argc
+              TKGEN_TK(TokenType::TK_NUMBER, "argc");
+              int argc = std::stoi(tk->getValue());
 
-          FN_ARG_NODE aa = {"", "", false};
-          std::vector<FN_ARG_NODE> vv{(size_t)argc, aa};
-          fnode.args = vv;
-
-          //* cast
-          TKGEN_TK("cast", "cast");
-          TKGEN_TK(TokenType::TK_OPEN, "cast");
-          for (int k=0; k < argc; k++) {
-            TKGEN_TK(TokenType::TK_NUMBER, "cast");
-            fnode.args.at(k).isForCast = tk->has("1");
-            // TKGEN_TK(",", "cast");
+              FN_ARG_NODE aa = {"", "", false};
+              std::vector<FN_ARG_NODE> vv{(size_t)argc, aa};
+              fnode.args = vv;
+              is_argc = true;
+            }
+            else if (tk->has("cast")) {
+              //* cast
+              TKGEN_TK(TokenType::TK_OPEN, "cast"); int k = 0;
+              while (!tk->has(TokenType::TK_CLOSE)) {
+                tk = this->lexer->next();
+                if (tk->has(TokenType::TK_CLOSE)) { break; }
+                fnode.args.at(k++).isForCast = tk->has("1");
+                tk = this->lexer->next();
+              }
+              is_cast = true;
+            }
+            else if (tk->has("arg")) {
+              //* arg type
+              TKGEN_TK(TokenType::TK_OPEN, "arg"); int k = 0;
+              while (!tk->has(TokenType::TK_CLOSE)) {
+                tk = this->lexer->next();
+                if (tk->has(TokenType::TK_CLOSE)) { break; }
+                fnode.args.at(k).type = tk->getValue();
+                tk = this->lexer->next();
+              }
+              is_arg = true;
+            }
+            else if (tk->has("name")) {
+              //* arg name
+              TKGEN_TK(TokenType::TK_OPEN, "name"); int k = 0;
+              while (!tk->has(TokenType::TK_CLOSE)) {
+                tk = this->lexer->next();
+                if (tk->has(TokenType::TK_CLOSE)) { break; }
+                fnode.args.at(k).declName = tk->getValue();
+                tk = this->lexer->next();
+              }
+              is_name = true;
+            }
           }
-          TKGEN_TK(TokenType::TK_CLOSE, "cast");
 
-          //* arg type
-          TKGEN_TK("arg", "arg");
-
-          TKGEN_TK(TokenType::TK_OPEN, "arg");
-          for (int k=0; k < argc; k++) {
-            TKGEN_TK(TokenType::TK_TEXT, "arg");
-            fnode.args.at(k).type = tk->getValue();
-            // TKGEN_TK(",", "arg");
+          if (!is_type) {
+            fnode.rttype = "void";
+            std::vector<FN_ARG_NODE> vv{};
+            fnode.args = vv;
+            TKGEN_NEXT();
           }
-          TKGEN_TK(TokenType::TK_CLOSE, "arg");
-
-          //* arg name
-          TKGEN_TK("name", "name");
-          TKGEN_TK(TokenType::TK_OPEN, "name");
-          for (int k=0; k < argc; k++) {
-            TKGEN_TK(TokenType::TK_TEXT, "name");
-            fnode.args.at(k).declName = tk->getValue();
+          else if (!(is_arg && is_name)) {
+            BT_ERROR("undefined 'arg | name | cast'");
           }
-          TKGEN_TK(TokenType::TK_CLOSE, "name");
-          
+
           //* inner
-          TKGEN_BEGINEND(fnode.inner, "inner");
+          if (!tk->has("begin")) {
+            tk->printSelf();
+            BT_ERROR("inner");
+          }
+          
+          while (!tk->has("end")) {
+            tk = this->lexer->next();
+            fnode.inner.push_back(tk);
+          }
 
           this->declareFun(fnode.declName, fnode);
           tk = this->lexer->next();
+        }        
+        else if (tk->has("entry")) {
+          TKGEN_TK(TokenType::TK_TEXT, "entry");
+          entry = tk->getValue();
         }
-
-        else if (tk->has("call")) {
-          TKGEN_TK(TokenType::TK_TEXT, "name");
-          std::string name = tk->getValue();
-
-          bool is_declr = (name == "print");
-
-          if (!this->funs.row.count(name) && (!is_declr)) { 
-            BT_ERROR("undefined");
-          }
-          
-          FN_NODE fnode;
-
-          if (!is_declr) {
-            fnode = this->funs.row.find(name)->second;
-          }
-
-          //* argc
-          TKGEN_MT("argc", TokenType::TK_NUMBER, "argc");
-
-          int argc = std::stoi(tk->getValue());
-
-          // ! "argc error"
-          if ((!is_declr) && (fnode.args.size() != argc)) { 
-            BT_ERROR("argc");
-          }
-
-          std::vector<NODE> argv;
-
-          for (int k=0; k < argc; k++) {
-            argv.push_back(NODE{});
-          }
-          
-          //* arg
-          TKGEN_TK("arg","arg");
-
-          TKGEN_OPEN("arg");
-          for (int k=0; k < argc; k++) {
-            tk = this->lexer->next();
-            argv.at(k).type_name = tk->getValue();
-          }
-          TKGEN_CLOSE("arg");
-
-          //* val
-          TKGEN_TK("val", "val");
-
-          TKGEN_OPEN("val");
-          for (int k=0; k < argc; k++) {
-            tk = this->lexer->next();
-            if (
-              (!is_declr) &&
-              (fnode.args.at(k).type == "iew") && 
-              (!tk->has(TokenType::TK_NUMBER))
-            ) {
-              throw std::overflow_error("errr: type"); 
-            }
-
-            if (is_declr) {
-              if (tk->has("lst") && (argv.at(k).type_name == "iew")) {
-                argv.at(k).value = st.top().value;
-              }
-              else if (argv.at(k).type_name == "iew") {
-                argv.at(k).value = pint(tk->getValue());
-              }
-            }
-            else if (fnode.args.at(k).type == "iew") {
-              argv.at(k).value = pint(tk->getValue());
-            } else {
-              argv.at(k).value = pstr(tk->getValue());
-            }
-
-            // TKGEN_TK(",", ",");
-          }
-          TKGEN_CLOSE("val");
-
-          if (is_declr) {
-            this->workFun(name, argv);
-          } else {
-            bool is_args_match = TKFN_ARGMATCH(argc, argv, fnode.args);
-
-            if (!is_args_match) {
-              BT_ERRORA("argtype error", "arguments not matched");
-            }
-
-            std::map<std::string, TVAR> mvar;
-
-            mvar = GEN_MVAR(argc, argv, fnode.args, this->st);
-            
-            TKGEN_TK("end", "NOT END");
-
-            this->workBody(fnode.inner, mvar);
-            
-          }
-
-          TKGEN_NEXT();
-        }
-        
         else {
           TKGEN_NEXT();
         }
@@ -231,18 +173,28 @@ void Explorer::work_with_cbo() {
       } break;  
     }
   }
+
+  if (!is_exist(this->funs.row, entry)) {
+    BT_ERROR("undefined entry(tom) name");
+  }
+
+  FN_NODE fn = get_one(this->funs.row, entry);
+  this->workBody(fn.inner, {});
 }
 
 bool Explorer::workFun(std::string name, std::vector<NODE> argv) {
   bool matched = false;
-
   if (name == "print") {
     matched = true;
-    if (GETPT(chars, argv[0].value) == "lst") {
-      printlast(st);
-    } 
-    else if (argv[0].type_name == "iew") {
-      printf("%i", GETPT(int, argv[0].value));
+    if (st.empty()) {}
+    else if (st.top().type == "iew") {
+      printf("%i", GETPT(int, st.top().value));
+    }
+    else if (st.top().type == "lina") {
+      printf("%s", GETPT(chars, st.top().value));
+    }
+    else if (st.top().type == "ba") {
+      printf("%c", GETPT(char, st.top().value));
     }
   }
 
@@ -264,6 +216,8 @@ void Explorer::workBody(
   std::string tempa = "";
 
   for (Token* tk: tks) {
+
+#pragma region cmd
     if (tk->has("push")) {
       argcs = 0;
       cmd = "push";
@@ -390,6 +344,7 @@ void Explorer::workBody(
       break;
     }
 
+#pragma endregion cmd
     
     else if (skipIF) {
       //? alo📞 ...
@@ -397,6 +352,9 @@ void Explorer::workBody(
 
     else if (cmd == "push") {
       if (tk->has(TokenType::TK_TEXT)) {
+        if (!is_exist(mvar, tk->getValue())) {
+          cbocallErrW("undefined name '%s'", tk->getValue().c_str());
+        }
         TVAR rv = mvar.find(tk->getValue())->second;
         this->st.push({rv.type, rv.value});
       }
@@ -404,7 +362,7 @@ void Explorer::workBody(
         this->st.push({"iew", pint(tk->getValue())});
       }
       else if (tk->has(TokenType::TK_STRING)) {
-        this->st.push({"lina", pstr(tk->getValue())});
+        this->st.push({"lina", pchars(tk->getValue())});
       }
     }
     

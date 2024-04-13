@@ -27,40 +27,42 @@ enum STokenType {
   FLOAT_NUMBER,
 };
 
+typedef enum TokenType TokenType_t; 
+
 class Token {
 private:
-  TokenType type;
+  TokenType_t type;
   STokenType second_type;
   std::string value;
 public:
   Token();
-  Token(TokenType type);
-  Token(TokenType type, std::string value);
-  Token(TokenType type, STokenType second_type, std::string value);
+  Token(TokenType_t type);
+  Token(TokenType_t type, std::string value);
+  Token(TokenType_t type, STokenType second_type, std::string value);
 
   std::string getValue();
-  TokenType getType();
+  TokenType_t getType();
   STokenType getSecondType();
 
   void setValue(std::string value);
-  void setType(TokenType value);
+  void setType(TokenType_t value);
   void setSecondType(STokenType value);
 
   void appendValue(char* str);
   void appendValue(char c);
 
-  bool has(TokenType tt);
+  bool has(TokenType_t tt);
   bool has(STokenType stt);
-  bool has(TokenType tt, STokenType stt);
+  bool has(TokenType_t tt, STokenType stt);
   bool has(std::string value);
 
   static bool equalByFirst(Token* t1, Token* t2);
   static bool equalBySecond(Token* t1, Token* t2);
   static bool equalByFull(Token* t1, Token* t2);
 
-  static bool equalByFirst(Token* t1, TokenType tt);
+  static bool equalByFirst(Token* t1, TokenType_t tt);
   static bool equalBySecond(Token* t1, STokenType stt);
-  static bool equalByFull(Token* t1, TokenType tt, STokenType stt);
+  static bool equalByFull(Token* t1, TokenType_t tt, STokenType stt);
 
   void printSelf();
 };

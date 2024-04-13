@@ -168,7 +168,8 @@ struct NODE {
   } \
 
 #define TKGEN_TKNERR(str) \
-  tk = this->lexer->next(); \
+  tk = this->lexer->next();
+
 
 #define getNextStack() st.top(); st.pop()
 
@@ -185,7 +186,7 @@ enum ARGCOUNT_DECLFN {
 
 #define getargcount(name) \
   ([](std::string name) {\
-    int cnt = 0;\
+    int cnt = -1;\
     if (name == "print") {cnt = getargcount_(print);}\
     return cnt;\
   })(name)
@@ -200,18 +201,18 @@ enum ARGCOUNT_DECLFN {
 #define get_one(map_, key_) \
   map_.find(key_)->second
 
-#define ppp() printf("MARK! at %i line\n", __LINE__)
+#define CHKC() printf("MARK! at %i line\n", __LINE__);
 
 #define printlast(stack_)\
   if (stack_.empty()) {}\
   else if (stack_.top().type == "iew") {\
-    printf("st.top [%i]\n", GETPT(int, stack_.top().value));\
+    printf("%i", GETPT(int, stack_.top().value));\
   }\
   else if (stack_.top().type == "lina") {\
-    printf("st.top [%s]\n", GETPT(chars, stack_.top().value));\
+    printf("%s", GETPT(chars, stack_.top().value));\
   }\
   else if (stack_.top().type == "ba") {\
-    printf("st.top [%c]\n", GETPT(char, stack_.top().value));\
+    printf("%c", GETPT(char, stack_.top().value));\
   }\
 
 #define dublmem(new_, old) \

@@ -48,6 +48,7 @@ public:
 
 
 std::string* pstr(std::string str);
+char** pchars(std::string str);
 
 int* pint(int str);
 int* pint(std::string str);

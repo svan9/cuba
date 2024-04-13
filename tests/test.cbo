@@ -1,47 +1,9 @@
 doctype cuba_object
 
-tom add
-  type  iew
-  argc  2
-  cast  [ 0, 0 ]
-  arg   [ iew, iew ]
-  name  [ i1, i2 ]
+entry main
+
+tom main
 begin
-  push i1
-  push i2
-  int mult
-  call some
-  ret lst
-  pop 3
-end
-
-tom some
-  type  iew
-  argc  0
-  cast  [ ]
-  arg   [ ]
-  name  [ ]
-begin
-  var aaa
-  var bbb
-  mov lst aaa
-  push 32
-  mov lst bbb
-  pop 1
-  push 2
-  mov bbb lst
-  int add
-  ret lst
-end
-
-call add
-  argc  2
-  arg   [ iew, iew ]
-  val   [ 2, 5 ]
-end
-
-call print
-  argc  1
-  arg   [ iew ]
-  val   [ lst ]
+  push lx
+  call print
 end

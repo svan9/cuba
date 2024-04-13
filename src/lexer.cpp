@@ -76,7 +76,7 @@ void Lexer::forceSize(size_t size) {
 void Lexer::generateFromLine(std::string str) {
   size_t actualyTokenCount = 0;
 
-  for (int i = 0; i < str.size(); i++) {
+  for (int i = 0; i < str.size();i++) {
     char c = str[i];
 
     if (charIntoString(c, SPACES)) {
@@ -128,7 +128,7 @@ size_t Lexer::getSize() {
 }
 
 void Lexer::doString(int* index, std::string str) {
-  const char quote = str[*index];
+  const char quote = str[(*index)++];
   Token token{TokenType::TK_STRING};
 
   //? specify type of quotes 
@@ -148,8 +148,7 @@ void Lexer::doString(int* index, std::string str) {
   //? alo 📞
   for (int i = *index; i < str.size(); i++) {
     char c = str[i];
-
-    if (str[i] != quote && i-1 >= 0 && str[i-1] != '\\') {
+    if (!(str[i] != quote && i-1 >= 0 && str[i-1] != '\\')) {
       this->append(token);
       *index = i;
       return;
@@ -158,12 +157,13 @@ void Lexer::doString(int* index, std::string str) {
     }
   }
 
+  this->append(token);
+  *index = str.size()-1;
 }
 
 void Lexer::doBrackets(int* index, std::string str) {
   const char bracket = str[*index];
   Token token;
-
 
   if (this->charIntoString(bracket, OPEN_BRACKETS)) {
     token = {TokenType::TK_OPEN};
@@ -209,14 +209,15 @@ void Lexer::doEngl(int* index, std::string str) {
 
     if (!charIntoString(c, ASSERTED_FOR_NAME)) {
       this->append(token);
-      *index = i;
+      *index = i-1;
       return;
     }
 
     token.appendValue(c);
-
   }
-    
+
+  this->append(token);
+  *index = str.size()-1;
 }
 
 void Lexer::doNumber(int* index, std::string str) {
@@ -244,22 +245,26 @@ void Lexer::doNumber(int* index, std::string str) {
     //   return;
     // }
     // else 
-    if (!charIntoString(c, ASSERTED_FOR_NUMBERS)) {
+    if (c == EOF || !charIntoString(c, ASSERTED_FOR_NUMBERS)) {
       token.setSecondType(STokenType::SIMPLE_NUMBER);
       this->append(token);
-      *index = i;
+      *index = i-1;
       return;
     }
 
     token.appendValue(c);
   }
+
+  this->append(token);
+  *index = str.size()-1;
 }
 
 void Lexer::doSpecial(int* index, std::string str) {
   const char chr = str[*index];
   Token token{TokenType::TK_SPECIAL};
   token.appendValue(chr);
-  token.printSelf();
+  this->append(token);
+  // token.printSelf();
 }
 
 Token Lexer::simulateCharLikeBracket(char c) {
@@ -393,6 +398,12 @@ std::string* pstr(std::string str) {
   void *obj = malloc(sizeof(std::string));
   *(std::string*)obj = str;
   return (std::string*)obj;
+}
+
+char** pchars(std::string str) {
+  void *obj = malloc(sizeof(char*));
+  *(char**)obj = (char*)str.c_str();
+  return (char**)obj;
 }
 
 int* pint(int str) {

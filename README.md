@@ -59,7 +59,7 @@ begin                 // start of function inner
 end                   // end of function inner
 ```
 
-><span style="color: #993333; font-weight: bold; font-style: italic">!!! WARN !!! int function head statement used only order like [type, argc, cast, arg, name]</span>
+<!-- ><span style="color: #993333; font-weight: bold; font-style: italic">!!! WARN !!! int function head statement used only order like [type, argc, cast, arg, name]</span> -->
 
 ### In begin-end statement
 ```html
@@ -74,7 +74,8 @@ mov   <from> <to>   // put 'from' to 'to'
 
 ```
 
-### In global
+
+<!-- ### In global @depricated
 ```js
 call print        // call funtion
   argc  1         // declare arg count
@@ -82,7 +83,7 @@ call print        // call funtion
   val   [ lst ]   // lst use last in stack
 end
 // ps. it's print fn
-```
+``` -->
 ____
 
 <div style="text-align: center; font-style: italic;"><a href="https://github.com/svan9/">svan9</a> in 2024©️ v1.0.0.01</div>

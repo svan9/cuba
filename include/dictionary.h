@@ -31,6 +31,6 @@
 
 
 //# spaces
-#define SPACES "\r\n\t " // \f\v
+#define SPACES "\r\n\t\f\v\a\b " // 
 
 #endif
