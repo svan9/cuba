@@ -25,7 +25,8 @@ test: all
 # "E:\sosou\GITHUB\cuba\tests\test.cbo"
 
 ./$(EXECUTABLE): $(OBJECTS)
-	$(CXX) -I$(INCLUDE) $^ -o $@ $(CXX_ARGS)
+	windres "./bin/cuba.rc" -O coff -o ./bin/cuba.res
+	$(CXX) -I$(INCLUDE) $^ -o $@ ./bin/cuba.res $(CXX_ARGS)
 
 ./bin/obj/%.o: $(SRC)/%.cpp
 	$(CXX) -I$(INCLUDE) -I$(SRC) -c $< -o $@ $(CXX_ARGS)
