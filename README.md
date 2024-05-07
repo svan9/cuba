@@ -28,7 +28,7 @@ _____
 <div style="display: flex; align-items: center; justify-content: center; gap: 1rem;">
 
 
-### see [compiler/tests/cb/test1.cb](./compiler/tests/cb/test1.cb)
+### see [tests/cb/test1.cb](./tests/cb/test1.cb)
 
 
 </div>
