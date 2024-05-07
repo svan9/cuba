@@ -1,9 +1,0 @@
-doctype cuba_object
-
-entry main
-
-tom main
-begin
-  push lx
-  call print
-end

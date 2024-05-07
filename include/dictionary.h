@@ -18,10 +18,10 @@
 #define ASSERTED_FOR_NAME ENGL "_" NUMBER
 
 //# special symbols 
-#define SPECIAL "!@#$%^&*?/\\|,;:.~+=-"
+#define SPECIAL "!@#$%^&*?/\\|,;:.~+=-`"
 
 //# quotes
-#define QUOTES "\"'`"
+#define QUOTES "\"'"
 
 //# brackets
 //? 1 - figure | 2 - squared | 3 - rounded | 4 - arrowed 

@@ -82,10 +82,10 @@ void Lexer::generateFromLine(std::string str) {
     if (charIntoString(c, SPACES)) {
       //$ -> skip
     } 
-    else if (charIntoString(c, SPECIAL)) {
-      // printf("SPECIAL [%c] \n ", c);
+    else if (charIntoString(c, QUOTES)) {
+      // printf("QUOTES [%c]\n ", c);
       actualyTokenCount++;
-      this->doSpecial(&i, str);
+      this->doString(&i, str);
     }
     else if (charIntoString(c, NUMBER)) {
       // printf("AFN  [%c] \n ", c);
@@ -102,10 +102,10 @@ void Lexer::generateFromLine(std::string str) {
       actualyTokenCount++;
       this->doBrackets(&i, str);
     }
-    else if (charIntoString(c, QUOTES)) {
-      // printf("QUOTES [%c]\n ", c);
+    else if (charIntoString(c, SPECIAL)) {
+      // printf("SPECIAL [%c] \n ", c);
       actualyTokenCount++;
-      this->doString(&i, str);
+      this->doSpecial(&i, str);
     }
   }
 
@@ -139,9 +139,9 @@ void Lexer::doString(int* index, std::string str) {
     case '\"': {
       token.setSecondType(STokenType::DOUBLE_QUOTES);
     } break;
-    case '`': {
-      token.setSecondType(STokenType::TILTED_QUOTES);
-    } break;
+    // case '`': {
+    //   token.setSecondType(STokenType::TILTED_QUOTES);
+    // } break;
     default: break;
   }
 
@@ -401,9 +401,19 @@ std::string* pstr(std::string str) {
 }
 
 char** pchars(std::string str) {
-  void *obj = malloc(sizeof(char*));
-  *(char**)obj = (char*)str.c_str();
-  return (char**)obj;
+  char** obj = (char**)calloc(sizeof(char*), str.size());
+  char *buffer = (char*)malloc(sizeof(char));
+  for (int i = 0; i < str.size(); i++) {
+    buffer[i] = str[i];
+  }
+  *obj = buffer;
+  return obj;
+}
+
+char* pchar(char str) {
+  void *obj = malloc(sizeof(char));
+  *(char*)obj = str;
+  return (char*)obj;
 }
 
 int* pint(int str) {
@@ -416,4 +426,10 @@ int* pint(std::string str) {
   void *obj = malloc(sizeof(int));
   *(int*)obj = std::stoi(str);
   return (int*)obj;
+}
+
+std::bitset<8> *pbin(std::bitset<8> str) {
+  std::bitset<8>* obj = (std::bitset<8>*)malloc(str.size());
+  *obj = str;
+  return obj;
 }

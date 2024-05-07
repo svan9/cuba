@@ -1,6 +1,5 @@
 #include <cuba.h>
 
-
 #pragma region defs
 #include <limits.h>
 #include <stdlib.h>
@@ -8,20 +7,6 @@
 #include <sys/types.h>
 #include <unistd.h>
 #include <string.h>
-#include <windows.h>
-
-char* abspath(std::string* str) {
-  return _fullpath((char*)str->c_str(), str->c_str(), str->size());
-}
-
-char* abspath(const char* str) {
-  size_t length = strlen(str);
-  
-  char* buffer = (char*)calloc(length, sizeof(char));
-  _fullpath(buffer, str, length);
-  
-  return buffer;
-}
 
 std::string read_file(std::string path) {
   constexpr auto read_size = std::size_t(4096);
@@ -47,9 +32,15 @@ int main(int argc, char* argv[]) {
     char buffer[_MAX_PATH];
     char* pth = argv[1];
 
+#ifdef _WIN32
     if(_fullpath(buffer, pth, _MAX_PATH) == NULL) {
       throw std::runtime_error("path is null");
     }
+#else
+    if(realpath(pth, buffer) == NULL) {
+      throw std::runtime_error("path is null");
+    }
+#endif
 
     std::string path(buffer);
 
@@ -59,7 +50,6 @@ int main(int argc, char* argv[]) {
     filestring = read_file(path);
 
     Lexer lexer(filestring);
-    // lexer.printTokens();
 
     Explorer expl(&lexer);
 

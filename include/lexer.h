@@ -4,6 +4,7 @@
 #include <iostream>
 #include <string>
 #include <token.h>
+#include <bitset>
 
 class Lexer {
 private:
@@ -53,4 +54,7 @@ char** pchars(std::string str);
 int* pint(int str);
 int* pint(std::string str);
 
+std::bitset<8>* pbin(std::bitset<8> str);
+
+char* pchar(char str);
 #endif

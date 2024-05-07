@@ -1,25 +1,8 @@
 #include <explorer.h>
 #include <cerror.h>
+#include <bitset>
 
-std::string string_format(const std::string fmt, ...) {
-  int size = ((int)fmt.size()) * 2 + 50;
-  std::string str;
-  va_list ap;
-  while (1) {
-    str.resize(size);
-    va_start(ap, fmt);
-    int n = vsnprintf((char *)str.data(), size, fmt.c_str(), ap);
-    va_end(ap);
-    if (n > -1 && n < size) {
-      str.resize(n);
-      return str;
-    }
-    if (n > -1) size = n + 1;
-    else size *= 2;
-  }
-  return str;
-}
-
+#include <utils.hpp>
 
 Explorer::Explorer(Lexer *l) {
   this->lexer = l;
@@ -197,6 +180,33 @@ bool Explorer::workFun(std::string name, std::vector<NODE> argv) {
       printf("%c", GETPT(char, st.top().value));
     }
   }
+  else if (name == "gets") {
+    matched = true;
+    chars type = GETPT(chars, st.top().value);
+    
+    if (st.empty()) {}
+    else if (type == "iew") {
+      int value;
+      scanf("%i", &value);
+      STACKN st;
+      st.type = type;
+      st.value = pint(value);
+    }
+    else if (type == "lina") {
+      chars value;
+      scanf("%s", &value);
+      STACKN st;
+      st.type = type;
+      st.value = pchars(value);
+    }
+    else if (type == "ba") {
+      char value;
+      scanf("%c", &value);
+      STACKN st;
+      st.type = type;
+      st.value = pchar(value);
+    }
+  }
 
   return matched;
 }
@@ -222,13 +232,29 @@ void Explorer::workBody(
       argcs = 0;
       cmd = "push";
     } 
+    else if (tk->has("cast")) {
+      argcs = 0;
+      cmd = "cast";
+    } 
     else if (tk->has("int")) {
       argcs = 0;
       cmd = "int";
     }
+    else if (tk->has("str")) {
+      argcs = 0;
+      cmd = "str";
+    }
+    else if (tk->has("bit")) {
+      argcs = 0;
+      cmd = "bit";
+    }
     else if (tk->has("pop")) {
       argcs = 0;
       cmd = "pop";
+    }
+    else if (tk->has("upop")) {
+      argcs = 0;
+      cmd = "upop";
     }
     else if (tk->has("ret")) {
       argcs = 0;
@@ -365,6 +391,34 @@ void Explorer::workBody(
         this->st.push({"lina", pchars(tk->getValue())});
       }
     }
+
+    else if (cmd == "cast") {
+      if (!st.empty()) {
+        STACKN content_, type_, newOut;
+      
+        if (st.empty()) { BT_ERROR("null"); }
+        type_ = getNextStack();
+        
+        if (st.empty()) { BT_ERROR("null"); }
+        content_ = getNextStack();
+
+        chars type = GETPT(chars, type_.value);
+        newOut.type = type;
+        
+        if (content_.type == "iew") {
+          
+        }
+        else if (content_.type == "lina") {
+          
+        }
+        else if (content_.type == "ba") {
+          
+        }
+
+
+        st.push(content_); st.push(type_); st.push(newOut);
+      }
+    }
     
     else if (cmd == "int") {
       if (tk->has("add")) {
@@ -433,6 +487,61 @@ void Explorer::workBody(
       }
     }
     
+    else if (cmd == "str") {
+      // len
+      if (tk->has("len")) {
+        STACKN text;
+        if (st.empty()) { cbocallErr("stack error 'is empty'"); }
+        text = getNextStack();
+        STACKN newOut;
+        newOut.type = "iew";
+        newOut.value = pint(strlen(GETPT(chars, text.value)));
+        st.push(text); st.push(newOut);
+      }
+    }
+
+    else if (cmd == "bit") {
+      // len
+      if (tk->has("left")) {
+        STACKN content, count;
+        if (st.empty()) { cbocallErr("stack error 'is empty'"); }
+        count = getNextStack();
+        if (st.empty()) { cbocallErr("stack error 'is empty'"); }
+        content = getNextStack();
+        STACKN newOut;
+        newOut.type = content.type;
+        std::string newStr;
+
+        chars str = GETPT(chars, content.value);
+        int shift = GETPT(int, count.value);
+
+        newStr.append(str);
+        newStr += std::string(shift, (char)0);
+        newOut.value = pchars(newStr.c_str());
+
+        st.push(content); st.push(count); st.push(newOut);
+      }
+      else if (tk->has("smsh")) {
+        STACKN right, left;
+        if (st.empty()) { cbocallErr("stack error 'is empty'"); }
+        left = getNextStack();
+        if (st.empty()) { cbocallErr("stack error 'is empty'"); }
+        right = getNextStack();
+        STACKN newOut;
+        newOut.type = left.type;
+        std::string newStr;
+
+        chars str1 = GETPT(chars, left.value);
+        chars str2 = GETPT(chars, right.value);
+
+        newStr.append(str1);
+        newStr.append(str2);
+      
+        newOut.value = pchars(newStr.c_str());
+        st.push(right); st.push(left); st.push(newOut);
+      }
+    }
+
     else if (cmd == "pop") {
       if (tk->has(TokenType::TK_NUMBER)) {
         int count = std::stoi(tk->getValue());
@@ -442,6 +551,21 @@ void Explorer::workBody(
           free(last.value);
           st.pop();
         }
+      }
+    }
+
+    else if (cmd == "upop") {
+      if (tk->has(TokenType::TK_NUMBER)) {
+        int count = std::stoi(tk->getValue());
+        if (st.empty()) {  } //: empty
+        STACKN lst_ = getNextStack(); 
+        for (int m=0; m<count; m++) {
+          if (st.empty()) break;
+          STACKN last = st.top();
+          free(last.value);
+          st.pop();
+        }
+        st.push(lst_);
       }
     }
    

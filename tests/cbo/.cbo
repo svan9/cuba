@@ -1,0 +1,11 @@
+entry main
+
+***
+
+
+***
+
+tom main:
+  mov axx
+  mov bxx
+  mov cxx

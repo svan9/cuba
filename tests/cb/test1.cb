@@ -1,0 +1,39 @@
+[!#joke]
+yas std;
+
+[!#gen<T>]
+xat list {
+  "count of elements";
+  `iew size;
+
+  "size of element";
+  `iew size_t = sizeof(T);
+  
+  "start pointer";
+  $ address;
+}
+
+[!#flags_support, !#bii<tom::new<arguments, inner>>]
+xat tom {
+  list<$> arguments;
+  block inner;
+
+  "translate root object prems";
+  self~inner;
+}
+
+tom main () {
+  self->arguments;
+}
+
+xat foo {
+  [!#festo]
+  tom create;
+}
+
+tom foo::create() {
+  late so_tom = tom::new() {};
+  
+
+  end;
+}
