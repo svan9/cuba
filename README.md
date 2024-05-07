@@ -1,9 +1,9 @@
 <br/>
 <p align="center">
   <div style="display: flex; align-items: center; justify-content: center; gap: 1rem;">
-    <a href="https://github.com/svan9/cuba">
+<!--     <a href="https://github.com/svan9/cuba">
       <img src="https://raw.githubusercontent.com/svan9/cuba-language/master/images/icon.png" alt="Logo" width="30" height="30" style="transform: translateY(7px)">
-    </a>
+    </a> -->
     <h3 align="center">CUBA</h3>
   </div>
   <p align="center">
