@@ -3,17 +3,17 @@
 
 #include <token.h>
 
-struct BLOCK;
+// struct BLOCK_t;
 
-struct RANGE;
+// struct RANGE_t;
 
-struct RANGE {
-  size_t start;
-  size_t end;
-}; 
+// struct RANGE_t {
+//   size_t start;
+//   size_t end;
+// }; 
 
-struct BLOCK {
-  RANGE pos;
-};
+// struct BLOCK_t {
+//   RANGE_t pos;
+// };
 
 #endif

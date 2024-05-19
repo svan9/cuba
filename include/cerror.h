@@ -7,6 +7,9 @@
   printf("\033[91m~~~ERROR [" ext "_ERROR]: %s \033[0m", text);\
   exit(0);
 
+#define cbcallErr(text) \
+  callErr("CB", text)
+
 #define cbocallErr(text) \
   callErr("CBO", text)
 

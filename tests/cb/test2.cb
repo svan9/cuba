@@ -4,21 +4,37 @@ yas std;
 entry main();
 
 [!#gen]
-xat list {
+xat list<T> {
   "count of elements (unsigned integer)";
   `iew size;
 
+  "size of element";
+  `iew size_t = sizeof(T);
+  
   "start pointer";
   $ address;
+
+  on {
+    [`iew i] -> {
+      rnd ((self.address*self->size_t)/10);
+    };
+  };
 };
 
 [!#flags_support, !#bii]
 xat tom {
-  list arguments;
+  list<$> arguments;
   block inner;
 
   "translate root object prems";
   self~inner;
+  
+  on {
+    () -> {
+      rnd (self::call);
+    };
+  };
+  
 };
 
 

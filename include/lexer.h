@@ -16,11 +16,11 @@ private:
   bool isCorrectIndex(size_t index);
   static bool charIntoString(char c, const char* string);
 
-  void doString(int* index, std::string str);
-  void doBrackets(int* index, std::string str);
-  void doEngl(int* index, std::string str);
-  void doSpecial(int* index, std::string str);
-  void doNumber(int* index, std::string str);
+  void doString(size_t* index, std::string str);
+  void doBrackets(size_t* index, std::string str);
+  void doEngl(size_t* index, std::string str);
+  void doSpecial(size_t* index, std::string str);
+  void doNumber(size_t* index, std::string str);
 
   Token simulateCharLikeBracket(char c);
 

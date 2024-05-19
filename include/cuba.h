@@ -1,6 +1,7 @@
 #ifndef CUBA_H
 #define CUBA_H
 
+#include <utils.hpp>
 #include <iostream>
 #include <string>
 #include <fstream>
@@ -11,7 +12,9 @@
 #include <lexer.h>
 #include <dictionary.h>
 #include <worker.h>
-#include <explorer.h>
+#include <cuba/cuba.h>
+// #include <explorer.h>
+
 
 #endif
 

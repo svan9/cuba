@@ -10,7 +10,7 @@ bool Lexer::isCorrectIndex(size_t index) {
 }
 
 bool Lexer::charIntoString(char c, const char* string) {
-  for (int i = 0; i < strlen(string); i++) {
+  for (size_t i = 0; i < strlen(string); i++) {
     if (string[i] == c) return true;
   }
   return false;
@@ -76,7 +76,7 @@ void Lexer::forceSize(size_t size) {
 void Lexer::generateFromLine(std::string str) {
   size_t actualyTokenCount = 0;
 
-  for (int i = 0; i < str.size();i++) {
+  for (size_t i = 0; i < str.size();i++) {
     char c = str[i];
 
     if (charIntoString(c, SPACES)) {
@@ -117,7 +117,7 @@ void Lexer::generateFromLine(std::string str) {
 
 void Lexer::printTokens() {
   printf("[");
-  for (int i = 0; i < this->size; i++) {
+  for (size_t i = 0; i < this->size; i++) {
     printf("{TYPE: %i; VALUE: '%s'}, ", this->tokens[i].getType(), this->tokens[i].getValue().c_str());
   }
   printf("]\n");
@@ -127,7 +127,7 @@ size_t Lexer::getSize() {
   return this->size;
 }
 
-void Lexer::doString(int* index, std::string str) {
+void Lexer::doString(size_t* index, std::string str) {
   const char quote = str[(*index)++];
   Token token{TokenType::TK_STRING};
 
@@ -146,7 +146,7 @@ void Lexer::doString(int* index, std::string str) {
   }
 
   //? alo 📞
-  for (int i = *index; i < str.size(); i++) {
+  for (size_t i = *index; i < str.size(); i++) {
     char c = str[i];
     if (!(str[i] != quote && i-1 >= 0 && str[i-1] != '\\')) {
       this->append(token);
@@ -161,7 +161,7 @@ void Lexer::doString(int* index, std::string str) {
   *index = str.size()-1;
 }
 
-void Lexer::doBrackets(int* index, std::string str) {
+void Lexer::doBrackets(size_t* index, std::string str) {
   const char bracket = str[*index];
   Token token;
 
@@ -199,12 +199,12 @@ void Lexer::doBrackets(int* index, std::string str) {
   this->append(token);
 }
 
-void Lexer::doEngl(int* index, std::string str) {
-  const char chr = str[*index];
+void Lexer::doEngl(size_t* index, std::string str) {
+  // const char chr = str[*index];
   Token token{TokenType::TK_TEXT};
 
   //? alo 📞
-  for (int i = *index; i < str.size(); i++) {
+  for (size_t i = *index; i < str.size(); i++) {
     char c = str[i];
 
     if (!charIntoString(c, ASSERTED_FOR_NAME)) {
@@ -220,12 +220,12 @@ void Lexer::doEngl(int* index, std::string str) {
   *index = str.size()-1;
 }
 
-void Lexer::doNumber(int* index, std::string str) {
-  const char chr = str[*index];
+void Lexer::doNumber(size_t* index, std::string str) {
+  // const char chr = str[*index];
   Token token{ TokenType::TK_NUMBER };
 
   // //? alo 📞
-  for (int i = *index; i < str.size(); i++) {
+  for (size_t i = *index; i < str.size(); i++) {
     char c = str[i];
 
     // if (
@@ -259,7 +259,7 @@ void Lexer::doNumber(int* index, std::string str) {
   *index = str.size()-1;
 }
 
-void Lexer::doSpecial(int* index, std::string str) {
+void Lexer::doSpecial(size_t* index, std::string str) {
   const char chr = str[*index];
   Token token{TokenType::TK_SPECIAL};
   token.appendValue(chr);
@@ -403,7 +403,7 @@ std::string* pstr(std::string str) {
 char** pchars(std::string str) {
   char** obj = (char**)calloc(sizeof(char*), str.size());
   char *buffer = (char*)malloc(sizeof(char));
-  for (int i = 0; i < str.size(); i++) {
+  for (size_t i = 0; i < str.size(); i++) {
     buffer[i] = str[i];
   }
   *obj = buffer;
