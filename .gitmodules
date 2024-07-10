@@ -1,0 +1,3 @@
+[submodule "jcb"]
+	path = jcb
+	url = https://github.com/svan9/jcb.git
