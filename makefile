@@ -1,13 +1,3 @@
-CXX 				:= g++
-CXX_ARGS		:= # -Wall -pedantic # -Wreturn-local-addr
-EXECUTABLE 	:= ./bin/cuba.exe
-
-SRC 				:= ./src
-INCLUDE 		:= ./include
-
-SOURCES    := $(wildcard $(SRC)/**/*.cpp $(SRC)/*.cpp) $(wildcard $(INCLUDE)/*.h, $(INCLUDE)/**/*.h)
-OBJECTS    := $(patsubst $(SRC)/%.cpp, ./bin/obj/%.o, $(SOURCES))
-
 ifeq ($(wildcard ./bin),)
 $(shell mkdir "./bin")
 endif
@@ -15,24 +5,39 @@ ifeq ($(wildcard ./bin/obj),)
 $(shell mkdir "./bin/obj")
 endif
 
-all: ./$(EXECUTABLE)
+EXE 				:= ./bin/cuba.exe
+SOURCES    	:= $(wildcard ./src/**/*.cpp ./src/*.cpp)
+OBJECTS    	:= $(patsubst ./src/%.cpp, ./bin/obj/%.o, $(SOURCES))
+
+all: clean libs ./$(EXE)
+
+dev: ./$(EXE)
 
 run: all
-	./$(EXECUTABLE)
+	./$(EXE)
 
-test: all
-	./$(EXECUTABLE) ./tests/test.cbo 
-# "E:\sosou\GITHUB\cuba\tests\test.cbo"
+# windres "./bin/cuba.rc" -O coff -o ./bin/cuba.res
+$(EXE): $(OBJECTS)
+	g++ $^ -o $@
 
-./$(EXECUTABLE): $(OBJECTS)
-	windres "./bin/cuba.rc" -O coff -o ./bin/cuba.res
-	$(CXX) -I$(INCLUDE) $^ -o $@ ./bin/cuba.res $(CXX_ARGS)
+$(OBJECTS): $(SOURCES)
+	g++ -I./include -I./src -L./lib -ljcb -c $^ -o $@
 
-./bin/obj/%.o: $(SRC)/%.cpp
-	$(CXX) -I$(INCLUDE) -I$(SRC) -c $< -o $@ $(CXX_ARGS)
+libs:
+	make -Cjcb build-lib -b
+	cp ./jcb/bin/jcb.a ./lib
 
 clean:
-	$(shell "rmdir /s /q bin")
-# rmdir "./bin/obj/*.o"
+	rm -rf ./bin
+
+commit: commit-jcb commit-cuba
+
+commit-cuba:
+	powershell -File "E:/so2u/GITHUB/cuba/cuba/commit.ps1"
+
+commit-jcb:
+	cd ./jcb
+	powershell -File "E:/so2u/GITHUB/cuba/cuba/commit.ps1"
+	cd ..
 
 -include $(OBJECTS:.o=.d)
