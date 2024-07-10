@@ -1,0 +1,90 @@
+[!#joke]
+yas std;
+
+entry main();
+
+[!#gen]
+xat list {
+  "count of elements (unsigned integer)";
+  `iew size;
+  
+  "start pointer";
+  $ address;
+
+  on {
+    [`iew i] -> {
+      late iew a = 10;
+      req self.address::slice i, i+1;
+      
+      end;
+    };
+  };
+};
+
+[!#flags_support, !#bii]
+xat func {
+  Array arguments;
+  block inner;
+
+  "Translate Root Object Prems";
+  self~inner;
+  
+  on {
+    () (Array a) -> {
+      late $ o = (1, 2)~(iew a, iew b);
+      a~self.arguments;
+      poka (i < arguments) {
+        self.arguments[i]~self.inner,
+      }
+      self.inner::call~self.return;
+      rnd self.return;
+    };
+  
+  };
+};
+
+late main {
+  
+};
+
+tom foo::create (iew a, iew b) {
+  late tom so_tom = tom::new () {};
+  self.arguments[10];
+
+  printout BUFFER;
+  writefile BUFFER;
+  BUFFER buf = readfile PATHLIKE;
+  "Buffer == string";
+
+  BUFFER buf;
+  BUFFER nbuf = execute buf;
+
+  iew a = 10;
+  self.arguments[0];
+
+  foo::create(10, b);
+};
+
+xat foo {
+  [!#festo] 
+  tom create;
+};
+
+iew main() {
+  iew x1 = 10; 
+  iew x2 = 15; 
+  
+  "condition";
+  f (x1 >= x2) {
+
+  }
+
+  "if not touched"; 
+  edie {
+    
+  }
+  "if touched";
+  iiod {
+
+  }
+};

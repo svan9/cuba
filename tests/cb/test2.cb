@@ -1,0 +1,38 @@
+struct func {
+  Array arguments;
+  block inner;
+
+  "Translate Root Object Prems";
+  self~inner;
+  
+  on {
+    #array (Array a) -> {
+      late $ o = (1, 2)~(int a, int b);
+      a~self.arguments;
+      poka (i < arguments) {
+        self.arguments[i]~self.inner,
+      }
+      self.inner::call~self.return;
+      rnd self.return;
+    };
+  
+  };
+};
+
+entry {
+  int x1 = 10; 
+  int x2 = 15; 
+
+  if (x1 >= x2) {
+
+  }
+  else if(x1 == x2) {
+    
+  }
+  else {
+    
+  }
+  finally {
+
+  }
+};

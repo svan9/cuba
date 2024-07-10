@@ -1,0 +1,4 @@
+entry {
+  buffer str = "hellow, word\x0A";
+  printout str;
+};

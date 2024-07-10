@@ -1,39 +1,90 @@
 [!#joke]
 yas std;
 
-[!#gen<T>]
+entry main();
+
+[!#gen]
 xat list {
-  "count of elements";
+  "count of elements (unsigned integer)";
   `iew size;
 
-  "size of element";
-  `iew size_t = sizeof(T);
-  
   "start pointer";
   $ address;
-}
+};
 
-[!#flags_support, !#bii<tom::new<arguments, inner>>]
+[!#flags_support, !#bii]
 xat tom {
-  list<$> arguments;
+  list arguments;
   block inner;
 
   "translate root object prems";
-  self~inner;
-}
 
-tom main () {
-  self->arguments;
-}
+  self~inner;
+};
+
+
+iew main = {
+  iew x1 = 10; 
+  iew x2 = 15; 
+  
+  "condition";
+  iiow (x1 >= x2) {
+
+  }
+  "if not touched"; 
+  edie {
+    
+  } 
+  "if touched";
+  iiod {
+
+  }
+
+  // #1 
+  if (x1 >= x2) {
+    
+  }
+  // #2 
+  else if (x1 == x2) {
+
+  }
+  finally {
+
+  }
+  else {
+
+  }
+};
 
 xat foo {
   [!#festo]
   tom create;
-}
+};
+
+tom readfile(lina path) {
+  BUFFER buf = path::stob;
+  execute buf;
+};
+
+macro print(a) printout #a;
 
 tom foo::create() {
-  late so_tom = tom::new() {};
+  late tom so_tom = tom::new() {};
+  "BUFFER == string";
+  printout BUFFER;
+  print(a);
   
+  writefile BUFFER;
+  BUFFER buf = readfile PATHLIKE;
 
+  BUFFER buf = b97x97x97x10;
+  execute buf; // comment 
+
+
+  buf::at 10;
+  buf::atc 10 50;
+  ***
+    comment
+  ***
   end;
-}
+};
